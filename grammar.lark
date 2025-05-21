@@ -1,0 +1,75 @@
+?start     : program
+
+program    : stmt*
+
+// COMANDOS E DECLARAÇÕES
+
+// Define o corpo de um loop. Não pode ser uma declaração de variável direta,
+// mas pode ser um bloco (que internamente pode ter declarações) ou outros comandos simples.
+loop_body_content : block
+                  | print_cmd
+                  | expr ";" -> to_expr_stmt // Expressão como comando, será transformada em ExprStmt
+
+while_stmt : "while" "(" expr ")" loop_body_content // Referencia a regra renomeada
+
+?stmt      : var_def
+           | print_cmd
+           | block
+           | expr ";" -> to_expr_stmt // Expressões usadas como statements
+           | while_stmt          // Adicionando while_stmt à regra stmt
+
+print_cmd  : "print" expr ";"
+var_def    : "var" VAR ("=" expr)? ";" 
+block      : "{" stmt* "}"
+
+// EXPRESSÕES
+?expr      : assign
+
+?assign    : VAR "=" expr 
+           | test
+
+?test      : test "==" cmp  -> eq
+           | test "!=" cmp  -> ne
+           | cmp
+
+?cmp       : cmp ">" factor   -> gt
+           | cmp "<" factor   -> lt
+           | cmp ">=" factor  -> ge
+           | cmp "<=" factor  -> le
+           | factor
+
+?factor    : factor "+" term  -> add
+           | factor "-" term  -> sub
+           | term
+
+?term      : term "*" unary   -> mul
+           | term "/" unary   -> div 
+           | unary
+
+?unary     : "-" unary -> neg
+           | "!" unary -> not_
+           | call
+
+?call      : call "(" params ")" 
+           | atom                
+
+params     : [ expr ("," expr )* ] 
+
+?atom      : NUMBER 
+           | BOOL
+           | VAR
+           | STRING
+           | NIL
+           | "(" ")"                   -> tuple_empty    
+           | "(" expr "," ")"          -> tuple_single   
+           | "(" expr ("," expr)+ ")"  -> tuple_multi    
+           | "(" expr ")"                
+
+BOOL.2     : "true" | "false"
+NIL.2      : "nil"
+VAR.1      : /[a-z_][a-zA-Z0-9_]*/ 
+NUMBER     : /([1-9][0-9]*|0)(\.[0-9]+)?/ 
+STRING     : /"[^"]*"/ 
+COMMENT    : "//" /[^\n]*/
+
+%ignore /\s+/ | COMMENT
