@@ -1,0 +1,12 @@
+digraph {
+    layout = "fdp";
+    start [shape = diamond;];
+    accept [shape = box;];
+    start -> x [label = "1";];
+    x -> y [label = "0";];
+    x -> z [label = "1";];
+    y -> y [label = "1";];
+    y -> z [label = "1";];
+    z -> x;
+    y -> accept [label = "0";];
+}

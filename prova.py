@@ -1,8 +1,8 @@
 # Preencha Informações básicas
-nome = "Seu Nome Completo Aqui"
-matricula = "12/345678"
-github = "@seu_usuario_github"
-turma = "16h"  # ou "18h"
+nome = "Davi Araujo Bady Casseb"
+matricula = "21/1031682"
+github = "@dcasseb"
+turma = "18h"  # ou "18h"
 
 # Faça 5 das 6 questões da prova. Você deve escolher explicitamente quais
 # questões devem ser corrigidas. Cada questão vale 5pts. Comente a questão que
